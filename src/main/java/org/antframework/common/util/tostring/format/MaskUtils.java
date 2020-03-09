@@ -24,7 +24,7 @@ public final class MaskUtils {
      * @return 掩码后的字符串
      * @throws IllegalArgumentException startSize小于0或endSize小于0
      */
-    public static String mask(String str, int startSize, int endSize) {
+    public static String mask(CharSequence str, int startSize, int endSize) {
         return mask(str, startSize, endSize, DEFAULT_MASK_CHAR);
     }
 
@@ -38,7 +38,7 @@ public final class MaskUtils {
      * @return 掩码后的字符串
      * @throws IllegalArgumentException startSize小于0或endSize小于0
      */
-    public static String mask(String str, int startSize, int endSize, char maskChar) {
+    public static String mask(CharSequence str, int startSize, int endSize, char maskChar) {
         if (startSize < 0 || endSize < 0) {
             throw new IllegalArgumentException("startSize和endSize不能小于0");
         }
@@ -51,7 +51,9 @@ public final class MaskUtils {
         if (startSize > str.length()) {
             startSize = str.length();
         }
-        builder.append(str.substring(0, startSize));
+        for (int i = 0; i < startSize; i++) {
+            builder.append(str.charAt(i));
+        }
         // 构造中段掩码
         int maskEndIndex = str.length() - endSize;
         maskEndIndex = maskEndIndex < startSize ? startSize : maskEndIndex;
@@ -59,7 +61,9 @@ public final class MaskUtils {
             builder.append(maskChar);
         }
         // 构造末段明文
-        builder.append(str.substring(maskEndIndex));
+        for (int i = maskEndIndex; i < str.length(); i++) {
+            builder.append(str.charAt(i));
+        }
 
         return builder.toString();
     }
